@@ -1,0 +1,38 @@
+[
+  {
+    "input": "{\"amount\":10.00,\"currency\":\"CAD\"}",
+    "expected": "{\"amount\":10.0,\"currency\":\"CAD\"}"
+  },
+  {
+    "input": "{\"amount\": 10.5, \"qty\": 3}",
+    "expected": "{\"amount\":10.5,\"qty\":3}"
+  },
+  {
+    "input": "{\"name\":\"Ren\u00e9e Caf\u00e9\",\"url\":\"https://example.com/a/b\"}",
+    "expected": "{\"name\":\"Ren\\u00e9e Caf\\u00e9\",\"url\":\"https://example.com/a/b\"}"
+  },
+  {
+    "input": "{\"emoji\":\"\ud83d\ude00\",\"tab\":\"a\\tb\",\"nl\":\"a\\nb\",\"ctrl\":\"\\u0001\"}",
+    "expected": "{\"emoji\":\"\\ud83d\\ude00\",\"tab\":\"a\\tb\",\"nl\":\"a\\nb\",\"ctrl\":\"\\u0001\"}"
+  },
+  {
+    "input": "{\"quote\":\"say \\\"hi\\\"\",\"backslash\":\"a\\\\b\"}",
+    "expected": "{\"quote\":\"say \\\"hi\\\"\",\"backslash\":\"a\\\\b\"}"
+  },
+  {
+    "input": "{\"nested\":{\"list\":[1,2.0,{\"x\":null,\"y\":true,\"z\":false}]}}",
+    "expected": "{\"nested\":{\"list\":[1,2.0,{\"x\":null,\"y\":true,\"z\":false}]}}"
+  },
+  {
+    "input": "{\"empty\":{},\"emptyList\":[]}",
+    "expected": "{\"empty\":{},\"emptyList\":[]}"
+  },
+  {
+    "input": "{\"big\":1e21,\"small\":0.1,\"neg\":-2.50}",
+    "expected": "{\"big\":1e+21,\"small\":0.1,\"neg\":-2.5}"
+  },
+  {
+    "input": "{\"transactionId\":20163175,\"dateCreated\":\"2024-05-01 10:22:13\",\"cardBatchId\":3421,\"status\":\"APPROVED\",\"type\":\"purchase\",\"amount\":15.45,\"currency\":\"CAD\",\"avsResponse\":\"X\",\"cvvResponse\":\"M\",\"approvalCode\":\"T3E5ST\",\"cardToken\":\"27f0ee9bf5bd2b37849b41\",\"cardNumber\":\"4242********4242\",\"cardHolderName\":\"Jane O\u2019Neil\",\"customerCode\":\"CST1049\",\"invoiceNumber\":\"INV-1043/2024\",\"warning\":\"\"}",
+    "expected": "{\"transactionId\":20163175,\"dateCreated\":\"2024-05-01 10:22:13\",\"cardBatchId\":3421,\"status\":\"APPROVED\",\"type\":\"purchase\",\"amount\":15.45,\"currency\":\"CAD\",\"avsResponse\":\"X\",\"cvvResponse\":\"M\",\"approvalCode\":\"T3E5ST\",\"cardToken\":\"27f0ee9bf5bd2b37849b41\",\"cardNumber\":\"4242********4242\",\"cardHolderName\":\"Jane O\\u2019Neil\",\"customerCode\":\"CST1049\",\"invoiceNumber\":\"INV-1043/2024\",\"warning\":\"\"}"
+  }
+]

@@ -1,0 +1,79 @@
+{
+  "name": "use-helcim-pay",
+  "version": "0.1.0",
+  "description": "A TypeScript-first React hook and server helpers for HelcimPay.js: checkout initialization, iframe lifecycle, and transaction hash validation.",
+  "keywords": [
+    "helcim",
+    "helcimpay",
+    "helcim-pay-js",
+    "react",
+    "hook",
+    "payments",
+    "checkout",
+    "nextjs",
+    "typescript"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Trust-007/useHelcimPay.git",
+    "directory": "packages/use-helcim-pay"
+  },
+  "homepage": "https://github.com/Trust-007/useHelcimPay#readme",
+  "bugs": "https://github.com/Trust-007/useHelcimPay/issues",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./server": {
+      "import": {
+        "types": "./dist/server/index.d.ts",
+        "default": "./dist/server/index.js"
+      },
+      "require": {
+        "types": "./dist/server/index.d.cts",
+        "default": "./dist/server/index.cjs"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "prebuild": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+    "build": "tsdown",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "tsdown": "^0.22.2",
+    "vitest": "^5.0.2"
+  }
+}

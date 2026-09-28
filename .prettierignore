@@ -1,0 +1,5 @@
+dist
+.next
+coverage
+package-lock.json
+packages/*/test/fixtures
