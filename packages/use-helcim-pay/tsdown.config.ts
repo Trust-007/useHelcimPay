@@ -22,6 +22,9 @@ export default defineConfig([
   },
   {
     ...shared,
-    entry: { 'server/index': 'src/server/index.ts' },
+    entry: {
+      'server/index': 'src/server/index.ts',
+      'testing/index': 'src/testing/index.ts',
+    },
   },
 ]);

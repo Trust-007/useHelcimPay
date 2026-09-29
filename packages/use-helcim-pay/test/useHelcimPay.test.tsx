@@ -262,13 +262,18 @@ describe('useHelcimPay', () => {
   });
 
   it('reports SCRIPT_LOAD_FAILED when HelcimPay.js cannot load', async () => {
-    // With no start.js globals, the loader injects a real <script>; the test
-    // DOM refuses to load it and fires 'error'.
     delete window.appendHelcimPayIframe;
+    // Intercept the injected <script> and fail it, without a real network request.
+    const container = document.createElement('div');
+    vi.spyOn(document.head, 'appendChild').mockImplementation((node) => {
+      container.appendChild(node);
+      queueMicrotask(() => node.dispatchEvent(new Event('error')));
+      return node;
+    });
     const ctx = setup();
     await act(() => ctx.current().startCheckout({ sku: 'x' }));
     expect(ctx.current()).toMatchObject({ status: 'error', error: { code: 'SCRIPT_LOAD_FAILED' } });
-    expect(document.head.querySelector('script')).toBeNull(); // cleaned up for a retry
+    expect(container.querySelector('script')).toBeNull(); // removed, so a retry re-injects it
   });
 
   it('ignores startCheckout while a checkout is in progress', async () => {
