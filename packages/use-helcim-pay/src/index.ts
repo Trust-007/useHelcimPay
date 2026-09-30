@@ -7,6 +7,7 @@ export {
   type UseHelcimPayReturn,
   type ValidatePayload,
 } from './useHelcimPay';
+export { createCheckoutClient, type CheckoutClientOptions } from './checkoutClient';
 export {
   loadHelcimPayScript,
   DEFAULT_HELCIM_PAY_SCRIPT_URL,

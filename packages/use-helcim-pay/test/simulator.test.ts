@@ -239,6 +239,9 @@ describe('createHelcimSimulator', () => {
       // The invoice number is escaped, never injected as markup.
       expect(html).not.toContain('<script>alert(1)</script>');
       expect(html).toContain('&#60;script&#62;');
+      // A color-scheme declaration would make the iframe opaque whenever it
+      // differs from the host page's (e.g. dark mode), hiding the page behind.
+      expect(html).not.toMatch(/^s*color-schemes*:/m);
 
       const scripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map((m) => m[1]!);
       expect(scripts).toHaveLength(1);

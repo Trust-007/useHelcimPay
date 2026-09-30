@@ -130,18 +130,19 @@ export function renderCheckoutPage(input: CheckoutPageInput): string {
 <meta name="robots" content="noindex">
 <title>HelcimPay.js simulator</title>
 <style>
+  /* No color-scheme here on purpose: an iframe only stays transparent when its
+     document and the <iframe> element (color-scheme: normal, set by start.js)
+     use the same scheme. Dark mode is handled by the tokens below instead. */
   :root {
     --bg: #ffffff; --fg: #0f172a; --muted: #64748b; --line: #e2e8f0; --field: #f8fafc;
     --accent: #1d4ed8; --accent-fg: #ffffff; --danger: #b91c1c; --danger-bg: #fef2f2;
     --ok: #15803d; --ok-bg: #f0fdf4; --warn-bg: #fffbeb; --warn-fg: #92400e; --warn-line: #fde68a;
-    color-scheme: light;
   }
   @media (prefers-color-scheme: dark) {
     :root {
       --bg: #0f172a; --fg: #e2e8f0; --muted: #94a3b8; --line: #1e293b; --field: #111c33;
       --accent: #3b82f6; --danger: #fca5a5; --danger-bg: #3a1212; --ok: #4ade80; --ok-bg: #0f2a1a;
       --warn-bg: #2a2110; --warn-fg: #fcd34d; --warn-line: #4a3a12;
-      color-scheme: dark;
     }
   }
   * { box-sizing: border-box; }
@@ -352,7 +353,8 @@ ${body}
       });
   });
 
-  num.focus();
+  // preventScroll: focusing inside the iframe must not scroll the parent page.
+  num.focus({ preventScroll: true });
 })();
 </script>
 </body>

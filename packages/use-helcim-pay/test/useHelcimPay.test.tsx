@@ -208,6 +208,53 @@ describe('useHelcimPay', () => {
     expect(ctx.options.getCheckoutToken).toHaveBeenCalledTimes(2);
   });
 
+  it('tracks isOpen separately from status', async () => {
+    const ctx = setup();
+    expect(ctx.current().isOpen).toBe(false);
+    await openCheckout(ctx);
+    expect(ctx.current().isOpen).toBe(true);
+    post('ABORTED', 'declined');
+    expect(ctx.current()).toMatchObject({ status: 'declined', isOpen: true });
+    post('HIDE');
+    expect(ctx.current()).toMatchObject({ status: 'declined', isOpen: false });
+
+    await openCheckout(ctx);
+    post('SUCCESS', SUCCESS_MESSAGE);
+    await waitFor(() => expect(ctx.current().status).toBe('success'));
+    expect(ctx.current().isOpen).toBe(false);
+  });
+
+  it('keeps isOpen when closeOnSuccess is false', async () => {
+    const ctx = setup({ closeOnSuccess: false });
+    await openCheckout(ctx);
+    post('SUCCESS', SUCCESS_MESSAGE);
+    await waitFor(() => expect(ctx.current().status).toBe('success'));
+    expect(ctx.current().isOpen).toBe(true);
+    expect(iframe()).not.toBeNull();
+
+    // The confirmation screen's close button posts HIDE.
+    post('HIDE');
+    expect(ctx.current()).toMatchObject({ status: 'success', isOpen: false });
+    expect(iframe()).toBeNull();
+    expect(ctx.options.onClose).not.toHaveBeenCalled();
+    // The session is over, so a new checkout can start.
+    await openCheckout(ctx);
+    expect(ctx.options.getCheckoutToken).toHaveBeenCalledTimes(2);
+  });
+
+  it('notices the modal closing while the server is still validating', async () => {
+    let resolve!: (v: { valid: boolean }) => void;
+    const ctx = setup({ closeOnSuccess: false, validate: () => new Promise((r) => (resolve = r)) });
+    await openCheckout(ctx);
+    post('SUCCESS', SUCCESS_MESSAGE);
+    await waitFor(() => expect(ctx.current().status).toBe('validating'));
+    post('HIDE');
+    expect(ctx.current()).toMatchObject({ status: 'validating', isOpen: false });
+    await act(async () => resolve({ valid: true }));
+    expect(ctx.current()).toMatchObject({ status: 'success', isOpen: false });
+    await openCheckout(ctx); // session ended cleanly
+  });
+
   it('reports a close when the customer dismisses the modal', async () => {
     const ctx = setup();
     await openCheckout(ctx);

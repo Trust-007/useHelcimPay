@@ -88,6 +88,12 @@ export interface UseHelcimPayReturn<TInput, TValidation> {
   checkoutToken: string | null;
   /** `true` while initializing, open or validating. */
   isBusy: boolean;
+  /**
+   * `true` while the payment modal is on screen. After a decline the modal can
+   * still be open (the customer can try another card), so `status` alone
+   * doesn't say whether it's showing.
+   */
+  isOpen: boolean;
   /** Closes any open modal, cancels pending work, and returns to `idle`. */
   reset: () => void;
 }
@@ -97,6 +103,7 @@ interface State<TValidation> {
   error: HelcimPayError | null;
   result: HelcimPayResult<TValidation> | null;
   checkoutToken: string | null;
+  isOpen: boolean;
 }
 
 const INITIAL_STATE: State<never> = {
@@ -104,6 +111,7 @@ const INITIAL_STATE: State<never> = {
   error: null,
   result: null,
   checkoutToken: null,
+  isOpen: false,
 };
 
 const TOKEN_TTL_MS = 60 * 60 * 1000;
@@ -114,6 +122,8 @@ interface Session {
   id: number;
   /** Synchronous source of truth for message handling. React state only mirrors it. */
   phase: HelcimPayStatus;
+  /** Whether the iframe is on screen. */
+  modalShowing: boolean;
   checkoutToken?: string;
   abort: AbortController;
   cleanup: Array<() => void>;
@@ -189,6 +199,7 @@ export function useHelcimPay<TInput = void, TValidation = unknown>(
       const session: Session = {
         id: ++nextIdRef.current,
         phase: 'initializing',
+        modalShowing: false,
         abort: new AbortController(),
         cleanup: [],
       };
@@ -202,7 +213,7 @@ export function useHelcimPay<TInput = void, TValidation = unknown>(
       const fail = (error: HelcimPayError, { close = true } = {}) => {
         if (!isCurrent()) return;
         if (close) removeIframe();
-        update({ status: 'error', error });
+        update({ status: 'error', error, isOpen: false });
         endSession(session);
         optionsRef.current.onError?.(error);
       };
@@ -243,7 +254,11 @@ export function useHelcimPay<TInput = void, TValidation = unknown>(
       const onSuccessMessage = async (eventMessage: unknown) => {
         const { validate, closeOnSuccess = true } = optionsRef.current;
         session.phase = 'validating';
-        if (closeOnSuccess) removeIframe();
+        if (closeOnSuccess) {
+          session.modalShowing = false;
+          removeIframe();
+          update({ isOpen: false });
+        }
 
         let response: HelcimPayTransactionResponse | undefined;
         try {
@@ -294,7 +309,13 @@ export function useHelcimPay<TInput = void, TValidation = unknown>(
           verified: Boolean(validate),
         };
         update({ status: 'success', error: null, result });
-        endSession(session);
+        if (closeOnSuccess || !session.modalShowing) {
+          endSession(session);
+        } else {
+          // Helcim's confirmation screen is still up. Keep listening for its
+          // HIDE, but the token can no longer expire in a way that matters.
+          clearTimeout(timer);
+        }
         optionsRef.current.onSuccess?.(result);
       };
 
@@ -305,8 +326,18 @@ export function useHelcimPay<TInput = void, TValidation = unknown>(
         if (!data || typeof data !== 'object' || data.eventName !== eventName) return;
 
         const { phase } = session;
-        const live = phase === 'open' || phase === 'declined';
-        if (!live) return; // e.g. a HIDE after SUCCESS while validating
+        if (phase === 'validating' || phase === 'success') {
+          // Payment is done. The only thing left to hear about is the modal
+          // closing (e.g. Helcim's confirmation screen, with closeOnSuccess: false).
+          if (data.eventStatus === 'HIDE' && session.modalShowing) {
+            session.modalShowing = false;
+            removeIframe();
+            update({ isOpen: false });
+            if (phase === 'success') endSession(session);
+          }
+          return;
+        }
+        if (phase !== 'open' && phase !== 'declined') return;
 
         switch (data.eventStatus) {
           case 'SUCCESS':
@@ -324,8 +355,9 @@ export function useHelcimPay<TInput = void, TValidation = unknown>(
           }
           case 'HIDE':
             // The modal closed. After a decline, keep the decline visible.
+            session.modalShowing = false;
             removeIframe();
-            if (phase === 'open') update({ status: 'closed' });
+            update(phase === 'open' ? { status: 'closed', isOpen: false } : { isOpen: false });
             endSession(session);
             if (phase === 'open') optionsRef.current.onClose?.();
             return;
@@ -348,7 +380,8 @@ export function useHelcimPay<TInput = void, TValidation = unknown>(
       );
       session.cleanup.push(() => clearTimeout(timer));
 
-      update({ status: 'open', checkoutToken });
+      session.modalShowing = true;
+      update({ status: 'open', checkoutToken, isOpen: true });
       try {
         globals.appendHelcimPayIframe(checkoutToken, opts.allowExit ?? true);
       } catch (error) {
@@ -372,6 +405,7 @@ export function useHelcimPay<TInput = void, TValidation = unknown>(
     result: state.result,
     checkoutToken: state.checkoutToken,
     isBusy: BUSY.has(state.status),
+    isOpen: state.isOpen,
     reset,
   };
 }
