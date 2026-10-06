@@ -1,7 +1,7 @@
 {
   "name": "use-helcim-pay",
   "version": "0.1.0",
-  "description": "A TypeScript-first React hook and server helpers for HelcimPay.js: checkout initialization, iframe lifecycle, and transaction hash validation.",
+  "description": "Unofficial TypeScript-first React hook and server helpers for HelcimPay.js: checkout initialization, iframe lifecycle, and transaction hash validation. Not affiliated with Helcim.",
   "keywords": [
     "helcim",
     "helcimpay",
@@ -59,9 +59,20 @@
     },
     "./package.json": "./package.json"
   },
+  "typesVersions": {
+    "*": {
+      "server": [
+        "./dist/server/index.d.ts"
+      ],
+      "testing": [
+        "./dist/testing/index.d.ts"
+      ]
+    }
+  },
   "files": [
     "dist",
     "README.md",
+    "CHANGELOG.md",
     "LICENSE"
   ],
   "scripts": {
@@ -69,7 +80,8 @@
     "build": "tsdown",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "check:package": "publint && attw --pack ."
   },
   "peerDependencies": {
     "react": ">=18"
@@ -83,13 +95,16 @@
     "node": ">=20"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.5",
     "@testing-library/react": "^16.3.3",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "happy-dom": "^20.14.5",
+    "publint": "^0.3.24",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "tsdown": "^0.22.2",
     "vitest": "^5.0.2"
-  }
+  },
+  "author": "Trust-007"
 }

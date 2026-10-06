@@ -64,12 +64,12 @@ export function renderCheckoutPage(input: CheckoutPageInput): string {
     ? `
     <section id="form-view">
       <header class="head">
-        <p class="merchant"><svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M12 2a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V7a5 5 0 0 0-5-5Zm-3 8V7a3 3 0 1 1 6 0v3H9Z"/></svg> Secure checkout</p>
+        <p class="merchant">Payment simulator &middot; not affiliated with Helcim</p>
         <h1 id="title">${isVerify ? 'Save your card' : escapeHtml(amountLabel)}</h1>
         ${session.invoiceNumber ? `<p class="sub">Invoice ${escapeHtml(session.invoiceNumber)}</p>` : ''}
         ${closeButton}
       </header>
-      <p class="badge" role="note"><strong>Simulator</strong> Test mode. No real Helcim account, no real charge.</p>
+      <p class="badge" role="note"><strong>Simulator</strong> This is an unofficial test page, not Helcim&rsquo;s payment service. No real payment is made. Never enter real card details: only the test cards below are accepted.</p>
 
       <form id="pay-form" novalidate>
         <div id="alert" class="alert" role="alert" hidden></div>
@@ -128,7 +128,7 @@ export function renderCheckoutPage(input: CheckoutPageInput): string {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>HelcimPay.js simulator</title>
+<title>Payment simulator (unofficial, not Helcim)</title>
 <style>
   /* No color-scheme here on purpose: an iframe only stays transparent when its
      document and the <iframe> element (color-scheme: normal, set by start.js)

@@ -70,7 +70,7 @@ export function Storefront({ mode, scriptUrl }: { mode: 'mock' | 'live'; scriptU
   useEffect(() => {
     const messages: Partial<Record<typeof status, string>> = {
       initializing:
-        'POST /api/checkout/initialize → server gets a checkout token; HelcimPay.js loads',
+        'POST /api/checkout/initialize → server gets a checkout token; payment script loads',
       open: 'appendHelcimPayIframe(checkoutToken): payment window open',
       validating: 'SUCCESS event → POST /api/checkout/validate (hash checked on the server)',
     };
@@ -125,6 +125,7 @@ export function Storefront({ mode, scriptUrl }: { mode: 'mock' | 'live'; scriptU
             </ul>
             <CheckoutPanel
               pay={pay}
+              mode={mode}
               totalCents={totalCents}
               onPay={() => void pay.startCheckout(cart)}
             />
@@ -132,7 +133,7 @@ export function Storefront({ mode, scriptUrl }: { mode: 'mock' | 'live'; scriptU
         )}
       </section>
 
-      <UnderTheHood status={pay.status} error={pay.error} log={log} />
+      <UnderTheHood mode={mode} status={pay.status} error={pay.error} log={log} />
     </div>
   );
 }

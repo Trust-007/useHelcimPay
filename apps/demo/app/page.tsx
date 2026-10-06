@@ -33,6 +33,9 @@ export default function Home() {
       </header>
 
       <section className="pb-6 pt-4 sm:pt-8">
+        <p className="mb-2 text-sm font-medium text-muted">
+          Unofficial open-source project · not affiliated with Helcim
+        </p>
         <h1 className="max-w-2xl text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
           A React hook for HelcimPay.js
         </h1>
@@ -49,19 +52,22 @@ export default function Home() {
           role="note"
           className="mb-6 rounded-lg border border-warn-border bg-warn-bg px-4 py-3 text-sm text-warn"
         >
-          <strong className="font-semibold">Simulator mode.</strong> This demo runs against a
-          built-in HelcimPay.js simulator that follows Helcim&apos;s published API. There is no
-          Helcim account and no real charge. Use test card{' '}
-          <span className="font-mono tabular">4242 4242 4242 4242</span>, any future expiry and any
-          CVV, or pick another test card in the payment window.
+          <strong className="font-semibold">Demo only. No real payments.</strong> This store is
+          fictional and nothing is sold or charged. Checkout runs against a built-in simulator of
+          HelcimPay.js, written from Helcim&apos;s public documentation. It is not Helcim&apos;s
+          service. <strong className="font-semibold">Never enter real card details</strong>: only
+          test cards are accepted, such as{' '}
+          <span className="font-mono tabular">4242 4242 4242 4242</span> with any future expiry and
+          any CVV.
         </aside>
       ) : (
         <aside
           role="note"
           className="mb-6 rounded-lg border border-border bg-surface px-4 py-3 text-sm text-muted"
         >
-          <strong className="font-semibold text-fg">Live Helcim.</strong> Payments go to a Helcim
-          test account. Use Helcim&apos;s test cards only.
+          <strong className="font-semibold text-fg">Demo store.</strong> This fictional store sells
+          nothing. Checkout uses Helcim&apos;s payment window, connected to this deployment&apos;s
+          own Helcim account. Use Helcim&apos;s test cards only.
         </aside>
       )}
 
@@ -72,12 +78,28 @@ export default function Home() {
         />
       </main>
 
-      <footer className="mt-12 border-t border-border py-6 text-sm text-muted">
-        Built with{' '}
-        <a className="underline underline-offset-2 hover:text-fg" href={REPO_URL}>
-          use-helcim-pay
-        </a>
-        . Not affiliated with Helcim.
+      <footer className="mt-12 space-y-2 border-t border-border py-6 text-xs leading-relaxed text-muted">
+        <p>
+          <a className="underline underline-offset-2 hover:text-fg" href={REPO_URL}>
+            use-helcim-pay
+          </a>{' '}
+          is an independent, unofficial open-source project. It is not affiliated with, endorsed by,
+          or sponsored by Helcim Inc. Helcim and HelcimPay are trademarks of Helcim Inc., used here
+          only to describe compatibility. This project contains no Helcim code, logos or other
+          assets.
+        </p>
+        <p>
+          This website is a demonstration. The store and products are fictional, no goods are sold,
+          and no real payments are processed. Card details typed into the simulator are not stored.
+          The software is provided &ldquo;as is&rdquo;, without warranty of any kind, under the{' '}
+          <a
+            className="underline underline-offset-2 hover:text-fg"
+            href={`${REPO_URL}/blob/main/LICENSE`}
+          >
+            MIT License
+          </a>
+          .
+        </p>
       </footer>
     </div>
   );

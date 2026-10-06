@@ -13,12 +13,18 @@ export interface LogEntry {
 
 type StepState = 'todo' | 'active' | 'done' | 'failed' | 'stopped';
 
-const STEPS = [
-  { title: 'Create checkout session', where: 'Server → Helcim initialize API' },
-  { title: 'Customer pays', where: 'HelcimPay.js modal (iframe)' },
-  { title: 'Verify response hash', where: 'Server, using the secret token' },
-  { title: 'Order confirmed', where: 'Receipt shown' },
-] as const;
+function steps(mode: 'mock' | 'live') {
+  const helcim = mode === 'mock' ? 'simulated Helcim' : 'Helcim';
+  return [
+    { title: 'Create checkout session', where: `Server → ${helcim} initialize API` },
+    {
+      title: 'Customer pays',
+      where: `${mode === 'mock' ? 'Simulated ' : ''}HelcimPay.js modal (iframe)`,
+    },
+    { title: 'Verify response hash', where: 'Server, using the secret token' },
+    { title: 'Order confirmed', where: 'Receipt shown' },
+  ];
+}
 
 /** Maps the hook's status to a state for each of the four steps. */
 function stepStates(status: HelcimPayStatus, error: HelcimPayError | null): StepState[] {
@@ -85,10 +91,12 @@ export async function POST(req: Request, ctx: RouteContext<'/api/checkout/[actio
 }`;
 
 export function UnderTheHood({
+  mode,
   status,
   error,
   log,
 }: {
+  mode: 'mock' | 'live';
   status: HelcimPayStatus;
   error: HelcimPayError | null;
   log: LogEntry[];
@@ -115,7 +123,7 @@ export function UnderTheHood({
         </div>
 
         <ol className="mt-4 space-y-3">
-          {STEPS.map((step, i) => (
+          {steps(mode).map((step, i) => (
             <li key={step.title} className="flex gap-3">
               <StepMarker state={states[i]!} index={i} />
               <div className="min-w-0">

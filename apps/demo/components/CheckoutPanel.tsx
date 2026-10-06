@@ -15,12 +15,12 @@ function describeError(error: HelcimPayError): { title: string; body: string } {
     case 'SCRIPT_LOAD_FAILED':
       return {
         title: "The payment window didn't load",
-        body: 'HelcimPay.js could not be loaded. Check your connection or pause content blockers, then try again.',
+        body: 'The payment script could not be loaded. Check your connection or pause content blockers, then try again.',
       };
     case 'TOKEN_EXPIRED':
       return {
         title: 'Checkout timed out',
-        body: 'Secure checkout sessions last 60 minutes. Start again. You were not charged.',
+        body: 'Checkout sessions last 60 minutes. Start again. You were not charged.',
       };
     case 'VALIDATION_FAILED':
       return {
@@ -36,10 +36,12 @@ function describeError(error: HelcimPayError): { title: string; body: string } {
 
 export function CheckoutPanel({
   pay,
+  mode,
   totalCents,
   onPay,
 }: {
   pay: Pay;
+  mode: 'mock' | 'live';
   totalCents: number;
   onPay: () => void;
 }) {
@@ -50,13 +52,13 @@ export function CheckoutPanel({
   let label = `Pay ${total}`;
   let busy = false;
   if (status === 'initializing') {
-    label = 'Opening secure checkout…';
+    label = 'Opening checkout…';
     busy = true;
   } else if (status === 'validating') {
     label = 'Verifying payment…';
     busy = true;
   } else if (isOpen) {
-    label = 'Complete payment in the secure window';
+    label = 'Complete payment in the payment window';
   } else if (status === 'declined' || status === 'error') {
     label = `Try again · ${total}`;
   }
@@ -107,11 +109,13 @@ export function CheckoutPanel({
         aria-busy={busy}
         className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-accent px-4 py-3 font-medium text-accent-fg transition-colors hover:bg-accent-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:cursor-not-allowed disabled:opacity-60"
       >
-        {busy ? <Spinner /> : <LockIcon className="size-4" />}
+        {busy ? <Spinner /> : mode === 'live' && <LockIcon className="size-4" />}
         {empty ? 'Add something to your cart' : label}
       </button>
       <p className="mt-3 text-center text-xs text-muted">
-        Card details are entered in Helcim&apos;s secure window and never touch this site.
+        {mode === 'mock'
+          ? 'Demo only: payments are simulated and nothing is charged. Never enter real card details. Only the listed test cards are accepted.'
+          : 'Card details are entered in Helcim’s hosted payment window, not on this site.'}
       </p>
     </div>
   );

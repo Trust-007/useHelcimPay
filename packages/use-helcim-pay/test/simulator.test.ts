@@ -235,6 +235,10 @@ describe('createHelcimSimulator', () => {
       const html = await res.text();
       expect(html).toContain('$15.45 CAD');
       expect(html).toContain('4242 4242 4242 4242');
+      // The simulator must never pass itself off as Helcim or as a real payment page.
+      expect(html).toContain('not affiliated with Helcim');
+      expect(html).toContain('Never enter real card details');
+      expect(html).not.toMatch(/Secure checkout/i);
       expect(html).toContain('aria-label="Close payment window"');
       // The invoice number is escaped, never injected as markup.
       expect(html).not.toContain('<script>alert(1)</script>');

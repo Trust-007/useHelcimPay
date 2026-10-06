@@ -8,6 +8,7 @@
     "prebuild": "npm run build -w use-helcim-pay",
     "build": "next build",
     "start": "next start",
+    "pretypecheck": "npm run build -w use-helcim-pay",
     "typecheck": "next typegen && tsc --noEmit"
   },
   "dependencies": {

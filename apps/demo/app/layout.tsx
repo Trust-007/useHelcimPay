@@ -6,9 +6,9 @@ const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
 const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'useHelcimPay demo',
+  title: 'useHelcimPay demo (unofficial)',
   description:
-    'A live checkout built with useHelcimPay, a TypeScript-first React hook for HelcimPay.js.',
+    'Demo checkout for useHelcimPay, an unofficial open-source React hook for HelcimPay.js. Not affiliated with Helcim. No real payments.',
 };
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {

@@ -9,9 +9,10 @@ export async function POST(request: Request, ctx: RouteContext<'/api/checkout/[a
   try {
     handlers = getCheckoutHandlers();
   } catch (error) {
+    // Details (e.g. which env var is missing) go to the server log, not the client.
     console.error(error);
     return Response.json(
-      { error: error instanceof Error ? error.message : 'Server misconfigured' },
+      { error: 'Checkout is temporarily unavailable. Please try again later.' },
       { status: 500 },
     );
   }
