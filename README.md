@@ -8,7 +8,7 @@
 > [!IMPORTANT]
 > **Unofficial project.** Not affiliated with, endorsed by, or sponsored by Helcim Inc. See the [Disclaimer](#disclaimer).
 
-**Live demo:** _coming soon (Vercel)_ <!-- TODO: add the Vercel URL after the first deploy -->
+**Live demo:** **[react-hook-demo-alpha.vercel.app](https://react-hook-demo-alpha.vercel.app)**: a fictional store running on the built-in simulator. No real payments; use test card `4242 4242 4242 4242`.
 
 ```tsx
 const { startCheckout, status, error, result } = useHelcimPay({ ...checkoutClient });
