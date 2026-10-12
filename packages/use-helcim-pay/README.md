@@ -2,6 +2,8 @@
 
 A TypeScript-first React hook and server helpers for [HelcimPay.js](https://devdocs.helcim.com/docs/overview-of-helcimpayjs), Helcim's embedded payment modal.
 
+**Live demo:** [react-hook-demo-alpha.vercel.app](https://react-hook-demo-alpha.vercel.app) (simulator, no real payments)
+
 > **Unofficial project.** Not affiliated with, endorsed by, or sponsored by Helcim Inc. See the [Disclaimer](#disclaimer).
 
 ```tsx

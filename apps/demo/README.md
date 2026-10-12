@@ -2,6 +2,8 @@
 
 A small Next.js 16 store with a real checkout flow built on [`use-helcim-pay`](../../packages/use-helcim-pay). Build a cart, pay in the HelcimPay.js modal, and watch each step in the "Under the hood" panel.
 
+**Live:** https://react-hook-demo-alpha.vercel.app
+
 > [!IMPORTANT]
 > **Demo only.** The store is fictional and, in the default simulator mode, no real payments are processed. Never enter real card details. This is an unofficial project, not affiliated with, endorsed by, or sponsored by Helcim Inc. See the full [Disclaimer](../../README.md#disclaimer).
 
